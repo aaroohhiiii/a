@@ -1,24 +1,36 @@
 HOW TO CONVERT YOUR VIDEO TO FRAMES (for Core intro)
 ====================================================
 
-Option A — ffmpeg (recommended, 25 FPS)
----------------------------------------
-Install ffmpeg (e.g. brew install ffmpeg on Mac), then:
+CORE LIMITS — DO NOT EXCEED
+---------------------------
+  Frames: 40–80 total (NOT hundreds)
+  FPS: 8
+  Resolution: 960×540 or 1280×720
+  Format: JPG (not PNG)
+  Folder size: aim for 10–30 MB total
 
-  mkdir frames
-  ffmpeg -i myvideo.mp4 -vf "fps=25" frames/frame_%03d.png
+Core loads all UI textures into memory. Too many or too large = bad.
 
-This creates frame_001.png, frame_002.png, ... in the frames/ folder.
+RECOMMENDED — ffmpeg (8 FPS, JPG, 960px)
+-----------------------------------------
+From your project folder (where assets/myvideo.mp4 is):
 
-Option B — Online
------------------
-Use any "video to PNG frames" or "video to image sequence" tool.
-Export at 25 FPS if possible. Name files in order: frame_001.png, frame_002.png, etc.
+  1. Delete old frames (if any):
+     rm -rf frames
+     mkdir frames
+
+  2. Export Core-safe frames:
+     ffmpeg -i assets/myvideo.mp4 -vf "fps=8,scale=960:-1" -q:v 6 frames/frame_%03d.jpg
+
+  3. Check count and size:
+     ls frames | wc -l
+     du -sh frames
+     You should see ~40–80 images and ~10–30 MB. If over 100 frames, stop and reduce (trim video or lower fps).
 
 IMPORT INTO CORE
 ----------------
-1. In Core: Project Content → Import → select all your frame_XXX.png files.
-2. Open IntroImageSequence.lua.
+1. In Core: Project Content → Import → select all frame_XXX.jpg from the frames folder.
+2. Open IntroImageSequence.lua. Set FRAME_DURATION = 0.125 (for 8 FPS).
 3. For each imported image, right‑click in Project → Copy Asset ID.
 4. Paste each ID into the FRAME_ASSET_IDS table in order (first frame first).
 
@@ -28,4 +40,4 @@ CORE SETUP
 2. Add a Client script, paste in IntroImageSequence.lua (or use the script from this folder).
 3. Add custom property "IntroImage" (type: UI Image reference), assign your UI Image.
 4. Fill FRAME_ASSET_IDS with your frame asset IDs.
-5. Run the game — the sequence plays at ~25 FPS. Listen for "IntroImageSequence_Finished" to transition to gameplay.
+5. Run the game. Listen for "IntroImageSequence_Finished" to transition to gameplay.

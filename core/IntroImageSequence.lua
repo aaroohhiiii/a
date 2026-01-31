@@ -14,7 +14,7 @@
 ]]
 
 local INTRO_IMAGE = script:GetCustomProperty("IntroImage"):WaitForObject()
-local FRAME_DURATION = 0.04  -- ~25 FPS
+local FRAME_DURATION = 0.5  -- 2 FPS (~60 frames for ~30 sec intro)
 
 -- Add your frame asset IDs in order (frame_001, frame_002, ...). Get ID: Right‑click image in Project → Copy Asset ID.
 local FRAME_ASSET_IDS = {
