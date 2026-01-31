@@ -1,0 +1,31 @@
+HOW TO CONVERT YOUR VIDEO TO FRAMES (for Core intro)
+====================================================
+
+Option A — ffmpeg (recommended, 25 FPS)
+---------------------------------------
+Install ffmpeg (e.g. brew install ffmpeg on Mac), then:
+
+  mkdir frames
+  ffmpeg -i myvideo.mp4 -vf "fps=25" frames/frame_%03d.png
+
+This creates frame_001.png, frame_002.png, ... in the frames/ folder.
+
+Option B — Online
+-----------------
+Use any "video to PNG frames" or "video to image sequence" tool.
+Export at 25 FPS if possible. Name files in order: frame_001.png, frame_002.png, etc.
+
+IMPORT INTO CORE
+----------------
+1. In Core: Project Content → Import → select all your frame_XXX.png files.
+2. Open IntroImageSequence.lua.
+3. For each imported image, right‑click in Project → Copy Asset ID.
+4. Paste each ID into the FRAME_ASSET_IDS table in order (first frame first).
+
+CORE SETUP
+----------
+1. Create a UI Image (fullscreen or as large as you want the intro).
+2. Add a Client script, paste in IntroImageSequence.lua (or use the script from this folder).
+3. Add custom property "IntroImage" (type: UI Image reference), assign your UI Image.
+4. Fill FRAME_ASSET_IDS with your frame asset IDs.
+5. Run the game — the sequence plays at ~25 FPS. Listen for "IntroImageSequence_Finished" to transition to gameplay.
